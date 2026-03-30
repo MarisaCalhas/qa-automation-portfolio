@@ -9,7 +9,7 @@ from utils.test_data import TestData
 def test_valid_login(browser_page):
     """Verify user can login with valid credentials."""
 
-    page = browser_page
+    page = page
     login_page = LoginPage(page)
 
     with allure.step("Open login page"):

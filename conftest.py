@@ -3,6 +3,13 @@ import os
 from datetime import datetime
 
 
+import pytest
+
+@pytest.fixture
+def browser_page(page):
+    return page
+
+
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item):
     outcome = yield
