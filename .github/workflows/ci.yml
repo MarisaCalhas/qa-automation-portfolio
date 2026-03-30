@@ -1,13 +1,10 @@
-name: QA AUTOMATION PIPELINE
+name: QA Automation Pipeline
 
 on:
   push:
     branches: [ main ]
   pull_request:
 
-# =========================
-# 🔥 REQUIRED FOR PAGES
-# =========================
 permissions:
   contents: read
   pages: write
@@ -17,13 +14,13 @@ permissions:
 jobs:
 
 # =========================
-# 1. TESTS
+# TESTS
 # =========================
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -37,10 +34,7 @@ jobs:
           playwright install --with-deps
 
       - name: Run tests
-        run: pytest
-
-      - name: Ensure allure folder exists
-        run: mkdir -p allure-results
+        run: pytest -s -n 1 --alluredir=allure-results
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -50,7 +44,7 @@ jobs:
 
 
 # =========================
-# 2. REPORT BUILD
+# REPORT
 # =========================
   report:
     needs: test
@@ -73,7 +67,6 @@ jobs:
       - name: Generate report
         run: allure generate allure-results -o allure-report --clean
 
-      # 🔥 CRÍTICO PARA GITHUB PAGES
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -81,7 +74,7 @@ jobs:
 
 
 # =========================
-# 3. DEPLOY TO PAGES
+# DEPLOY
 # =========================
   deploy:
     needs: report
