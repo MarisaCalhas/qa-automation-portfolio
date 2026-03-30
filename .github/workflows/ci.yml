@@ -1,19 +1,23 @@
-name: QA Automation CI/CD Pipeline
+name: QA AUTOMATION PIPELINE
 
 on:
   push:
     branches: [ main ]
   pull_request:
 
+# =========================
+# 🔥 REQUIRED FOR PAGES
+# =========================
 permissions:
   contents: read
   pages: write
   id-token: write
 
+
 jobs:
 
 # =========================
-# 1. TEST STAGE
+# 1. TESTS
 # =========================
   test:
     runs-on: ubuntu-latest
@@ -35,7 +39,7 @@ jobs:
       - name: Run tests
         run: pytest
 
-      - name: Ensure results folder exists
+      - name: Ensure allure folder exists
         run: mkdir -p allure-results
 
       - name: Upload Allure results
@@ -46,7 +50,7 @@ jobs:
 
 
 # =========================
-# 2. REPORT STAGE
+# 2. REPORT BUILD
 # =========================
   report:
     needs: test
@@ -55,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download artifacts
+      - name: Download results
         uses: actions/download-artifact@v4
         with:
           name: allure-results
@@ -69,6 +73,7 @@ jobs:
       - name: Generate report
         run: allure generate allure-results -o allure-report --clean
 
+      # 🔥 CRÍTICO PARA GITHUB PAGES
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -76,7 +81,7 @@ jobs:
 
 
 # =========================
-# 3. DEPLOY STAGE
+# 3. DEPLOY TO PAGES
 # =========================
   deploy:
     needs: report

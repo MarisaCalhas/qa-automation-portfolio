@@ -2,15 +2,9 @@ import pytest
 import allure
 
 
-# ==============================
-# PLAYWRIGHT FIXTURE (CORRETO)
-# ==============================
 @pytest.fixture
 def page(playwright):
-    browser = playwright.chromium.launch(
-        headless=True,
-        args=["--no-sandbox"]
-    )
+    browser = playwright.chromium.launch(headless=True)
 
     context = browser.new_context(
         viewport={"width": 1280, "height": 720}
@@ -23,9 +17,6 @@ def page(playwright):
     browser.close()
 
 
-# ==============================
-# ALLURE DEBUG (SCREENSHOT FAIL)
-# ==============================
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -37,12 +28,6 @@ def pytest_runtest_makereport(item, call):
         if page:
             allure.attach(
                 page.screenshot(full_page=True),
-                name="Failure Screenshot",
+                name="FAIL",
                 attachment_type=allure.attachment_type.PNG
-            )
-
-            allure.attach(
-                page.url,
-                name="Last URL",
-                attachment_type=allure.attachment_type.TEXT
             )
