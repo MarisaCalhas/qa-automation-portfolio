@@ -1,20 +1,28 @@
-class LoginPage:
-    """Page Object Model for Login Page."""
+from playwright.sync_api import Page
 
-    def __init__(self, page):
+
+class LoginPage:
+    def __init__(self, page: Page):
         self.page = page
 
-        # Locators
-        self.username_input = "#username"
-        self.password_input = "#password"
-        self.login_button = "button[type='submit']"
+        # locators
+        self.username = "#username"
+        self.password = "#password"
+        self.submit = "button[type='submit']"
 
     def open(self):
-        """Navigate to login page."""
         self.page.goto("https://the-internet.herokuapp.com/login")
 
-    def login(self, username, password):
-        """Perform login action."""
-        self.page.fill(self.username_input, username)
-        self.page.fill(self.password_input, password)
-        self.page.click(self.login_button)
+        # garante que a página carregou
+        self.page.wait_for_selector(self.username)
+
+    def login(self, username: str, password: str):
+        self.page.wait_for_selector(self.username, state="visible")
+
+        self.page.fill(self.username, username)
+        self.page.fill(self.password, password)
+
+        self.page.click(self.submit)
+
+        # validação simples de login
+        self.page.wait_for_timeout(1000)

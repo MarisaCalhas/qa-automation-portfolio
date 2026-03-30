@@ -3,21 +3,16 @@ from pages.login_page import LoginPage
 from utils.test_data import TestData
 
 
-@allure.feature("Authentication")
-@allure.story("Valid login")
+@allure.feature("E2E Flow")
+@allure.story("Login flow")
 def test_valid_login(page):
-    """Verify user can login with valid credentials."""
 
-    login_page = LoginPage(page)
+    login = LoginPage(page)
 
-    with allure.step("Open login page"):
-        login_page.open()
+    login.open()
+    login.login(
+        TestData.VALID_USERNAME,
+        TestData.VALID_PASSWORD
+    )
 
-    with allure.step("Enter credentials and login"):
-        login_page.login(
-            TestData.VALID_USERNAME,
-            TestData.VALID_PASSWORD
-        )
-
-    with allure.step("Verify successful login"):
-        assert "secure" in page.url
+    assert "secure" in page.url

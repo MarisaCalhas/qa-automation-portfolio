@@ -1,11 +1,16 @@
 import logging
 
-def get_logger():
-    """Creates and returns a logger instance."""
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+def get_logger(name="framework"):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
 
-    return logging.getLogger()
+    if not logger.handlers:
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+    return logger

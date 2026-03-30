@@ -1,9 +1,9 @@
-class CartPage:
-    """Page Object Model for Cart Page."""
+from playwright.sync_api import Page
 
-    def __init__(self, page):
+
+class CartPage:
+    def __init__(self, page: Page):
         self.page = page
 
-    def open_cart(self):
-        """Navigate to cart page."""
-        self.page.goto("https://www.saucedemo.com/cart.html")
+    def open(self):
+        self.page.goto("https://example.com/cart")

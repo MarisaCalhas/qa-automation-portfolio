@@ -1,21 +1,15 @@
 import pytest
-import os
-from datetime import datetime
+from playwright.sync_api import sync_playwright
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item):
-    outcome = yield
-    rep = outcome.get_result()
+@pytest.fixture(scope="function")
+def page():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
 
-    if rep.when == "call" and rep.failed:
-        page = item.funcargs.get("page", None)
+        yield page
 
-        if page:
-            screenshots_dir = "screenshots"
-            os.makedirs(screenshots_dir, exist_ok=True)
-
-            file_name = f"{item.name}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png"
-            file_path = os.path.join(screenshots_dir, file_name)
-
-            page.screenshot(path=file_path, full_page=True)
+        context.close()
+        browser.close()
