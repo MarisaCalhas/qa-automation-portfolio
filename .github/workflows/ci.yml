@@ -12,11 +12,14 @@ permissions:
 
 jobs:
 
+# =========================
+# 1. TEST STAGE
+# =========================
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -30,7 +33,10 @@ jobs:
           playwright install --with-deps
 
       - name: Run tests
-        run: pytest -n 2 --alluredir=allure-results
+        run: pytest
+
+      - name: Ensure results folder exists
+        run: mkdir -p allure-results
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -39,26 +45,28 @@ jobs:
           path: allure-results
 
 
+# =========================
+# 2. REPORT STAGE
+# =========================
   report:
     needs: test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download Allure results
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: allure-results
 
-      - name: Install Node + Allure
+      - name: Install Allure
         run: |
           sudo apt-get update
           sudo apt-get install -y nodejs npm
           npm install -g allure-commandline
 
-      - name: Generate Allure report
+      - name: Generate report
         run: allure generate allure-results -o allure-report --clean
 
       - name: Upload Pages artifact
@@ -67,15 +75,16 @@ jobs:
           path: allure-report
 
 
+# =========================
+# 3. DEPLOY STAGE
+# =========================
   deploy:
     needs: report
     runs-on: ubuntu-latest
 
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
