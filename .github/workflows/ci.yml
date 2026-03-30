@@ -1,28 +1,54 @@
-name: CI - Docker UI Tests
+name: CI/CD - UI Tests + Allure Report
 
 on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  test:
+  test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t ui-tests .
+      - name: Set Node 24 (fix warning)
+        run: echo "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true" >> $GITHUB_ENV
 
-      - name: Run tests in Docker and export results
-        run: |
-          docker run --name test-container ui-tests
-          docker cp test-container:/app/allure-results ./allure-results
-          docker rm test-container
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          name: allure-results
-          path: allure-results
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps
+
+      - name: Run tests
+        run: |
+          pytest -n 2 --alluredir=allure-results
+
+      - name: Install Allure
+        run: npm install -g allure-commandline
+
+      - name: Generate Allure Report
+        run: allure generate allure-results -o allure-report --clean
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+  deploy:
+    needs: test-and-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
