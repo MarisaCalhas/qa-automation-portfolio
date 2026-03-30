@@ -1,10 +1,9 @@
-import allure
+import pytest
 from pages.login_page import LoginPage
 from utils.test_data import TestData
 
 
-@allure.feature("E2E Flow")
-@allure.story("Login flow")
+@pytest.mark.regression
 def test_valid_login(page):
 
     login = LoginPage(page)
