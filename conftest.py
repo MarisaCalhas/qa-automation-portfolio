@@ -1,33 +1,21 @@
 import pytest
-from playwright.sync_api import sync_playwright
-import allure
+import os
+from datetime import datetime
 
 
-@pytest.fixture
-def browser_page():
-    """Creates browser instance for each test."""
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
-        yield page
-        browser.close()
-
-
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    """Take screenshot on failure and attach to Allure report."""
-
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item):
     outcome = yield
-    report = outcome.get_result()
+    rep = outcome.get_result()
 
-    if report.when == "call" and report.failed:
-        page = item.funcargs.get("browser_page")
+    if rep.when == "call" and rep.failed:
+        page = item.funcargs.get("page", None)
 
         if page:
-            screenshot = page.screenshot()
+            screenshots_dir = "screenshots"
+            os.makedirs(screenshots_dir, exist_ok=True)
 
-            allure.attach(
-                screenshot,
-                name="Failure Screenshot",
-                attachment_type=allure.attachment_type.PNG
-            )
+            file_name = f"{item.name}_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png"
+            file_path = os.path.join(screenshots_dir, file_name)
+
+            page.screenshot(path=file_path, full_page=True)
