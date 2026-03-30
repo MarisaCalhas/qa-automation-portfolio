@@ -1,4 +1,4 @@
-name: UI Tests (Playwright + Pytest)
+name: UI Automation Tests (Playwright + Pytest)
 
 on:
   push:
@@ -23,11 +23,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest-xdist
           playwright install --with-deps
 
-      - name: Run tests
+      - name: Run tests (parallel execution)
         run: |
-          pytest --alluredir=allure-results
+          pytest -n 2 --alluredir=allure-results
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4

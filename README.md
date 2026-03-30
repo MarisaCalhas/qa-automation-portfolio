@@ -1,134 +1,96 @@
-# 🧪 UI Automation Framework (Python + Playwright)
+# 🇨🇭 UI Automation Framework (Python + Playwright)
 
+![CI](https://github.com/MarisaCalhas/qa-automation-portfolio/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![Playwright](https://img.shields.io/badge/Playwright-Automation-green)
-![Pytest](https://img.shields.io/badge/Pytest-Test%20Framework-yellow)
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)
-![Docker](https://img.shields.io/badge/Docker-Containerized-lightblue)
+![Pytest](https://img.shields.io/badge/Pytest-Framework-yellow)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
 
 ---
 
-## 📌 Overview
+## 🇨🇭 Overview (Swiss Standard QA Project)
 
-This project is a **scalable UI test automation framework** built with **Python, Playwright and Pytest**.
+This project simulates a **real-world QA Automation framework** used in enterprise environments such as **fintech and consulting companies in Switzerland**.
 
-It simulates a **real-world QA Automation environment** used in modern engineering teams.
+It demonstrates production-level skills in:
 
-The goal of this project is to demonstrate **industry-level automation skills**, including:
-
-- Scalable test architecture
-- Maintainable Page Object Model (POM)
+- Scalable automation architecture
 - CI/CD pipeline integration
-- Containerized execution
-- Automated reporting
+- Parallel test execution
+- Maintainable test design (POM)
+- Reporting and observability
 
 ---
 
 ## 🏗️ Architecture
 
-This framework follows the **Page Object Model (POM)** design pattern:
-
-- Each page is represented as an independent class
-- UI logic is separated from test logic
-- Promotes reusability and maintainability
-- Easy to scale for large test suites
-
-### 📁 Main structure:
-
-- `pages/` → Page Object classes
-- `tests/` → Test cases
-- `utils/` → Helpers (logging, test data)
-- `conftest.py` → Fixtures & hooks
+- Page Object Model (POM)
+- Separation of UI logic and test logic
+- Reusable components
+- Scalable structure for enterprise use
 
 ---
 
-## 🧰 Tech Stack
+## ⚙️ CI/CD Pipeline
 
-- Python 3.11+
-- Playwright
-- Pytest
-- GitHub Actions (CI/CD)
-- Docker
-- Allure Reports
+GitHub Actions automatically:
 
----
+- Installs dependencies
+- Executes test suite in parallel
+- Runs Playwright browser tests
+- Generates Allure results
 
-## 🚀 CI/CD Pipeline
-
-This project uses **GitHub Actions** to automate testing.
-
-On every push or pull request:
-
-- Dependencies are installed
-- Test suite is executed
-- Playwright runs UI automation tests
-- Results are uploaded as artifacts
-
-📄 Workflow file:
-`.github/workflows/tests.yml`
+✔ Triggered on every push and pull request
 
 ---
 
-## 📊 Reporting
+## 🧪 Test Execution Strategy
 
-The framework integrates **Allure Reports** for advanced test reporting.
+- Smoke tests → critical flows
+- Regression tests → full suite
+- Parallel execution using pytest-xdist
+- Cross-browser ready (Playwright)
 
-### Features:
-- Step-by-step execution logs
-- Automatic failure screenshots
-- Test categorization (smoke/regression)
-- Historical execution tracking
+---
+
+## 📊 Reporting (Allure)
+
+- Test execution logs
+- Failure tracking
+- Attachments (screenshots)
+- Structured reporting for QA analysis
 
 ---
 
 ## 🐳 Docker Support
 
-Run tests in a containerized environment:
-
 ```bash
 docker build -t ui-tests .
 docker run ui-tests
 
-
-
 ▶️ How to Run Locally
-1. Install dependencies
 pip install -r requirements.txt
 playwright install
-2. Run all tests
-pytest
-3. Run smoke tests
+Run tests
+pytest -n 2
+Smoke tests
 pytest -m smoke
-4. Generate Allure report
-pytest --alluredir=allure-results
-allure serve allure-results
-🧪 Test Strategy
+📈 Engineering Skills Demonstrated
+UI Automation (Playwright)
+Test Framework Design (Pytest)
+Scalable Architecture (POM)
+CI/CD Engineering (GitHub Actions)
+Parallel Test Execution
+Containerized Testing (Docker)
+Reporting & Debugging (Allure)
+🎯 Business Value
 
-The framework supports:
+This framework simulates QA practices used in:
 
-Smoke testing (critical flows)
-Regression testing (full suite)
-UI functional validation
-Cross-browser testing (Playwright capability)
-📈 Skills Demonstrated
-
-This project demonstrates real-world QA Automation Engineering skills:
-
-End-to-end UI test automation (Playwright)
-Scalable test framework design (Pytest)
-Page Object Model (POM) architecture
-CI/CD integration (GitHub Actions)
-Containerized execution (Docker)
-Test reporting (Allure Reports)
-Clean code and maintainable test design
-🎯 Project Goal
-
-This project was built as part of a QA Automation portfolio to demonstrate readiness for:
-
-QA Automation Engineer roles
-SDET Junior/Mid positions
-International remote QA opportunities
+Swiss fintech companies
+Consulting firms (Accenture-style environments)
+Enterprise SaaS platforms
 👩‍💻 Author
 
 Marisa Calhas
-QA Automation Engineer Portfolio Project
+QA Automation Engineer Portfolio
