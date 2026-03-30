@@ -10,7 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-
 jobs:
 
 # =========================
@@ -21,7 +20,7 @@ jobs:
     defaults:
       run:
         working-directory: project_1_ui_ecommerce
-        
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
