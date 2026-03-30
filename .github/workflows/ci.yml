@@ -15,9 +15,11 @@ jobs:
       - name: Build Docker image
         run: docker build -t ui-tests .
 
-      - name: Run tests in Docker
+      - name: Run tests in Docker and export results
         run: |
-          docker run ui-tests
+          docker run --name test-container ui-tests
+          docker cp test-container:/app/allure-results ./allure-results
+          docker rm test-container
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
