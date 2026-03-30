@@ -1,8 +1,9 @@
-name: CI/CD - UI Tests + Allure Report
+name: QA Automation CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
+  pull_request:
 
 permissions:
   contents: read
@@ -10,15 +11,13 @@ permissions:
   id-token: write
 
 jobs:
-  test-and-deploy:
+
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set Node 24 (fix warning)
-        run: echo "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true" >> $GITHUB_ENV
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,13 +30,35 @@ jobs:
           playwright install --with-deps
 
       - name: Run tests
+        run: pytest -n 2 --alluredir=allure-results
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+
+      - name: Install Node + Allure
         run: |
-          pytest -n 2 --alluredir=allure-results
+          sudo apt-get update
+          sudo apt-get install -y nodejs npm
+          npm install -g allure-commandline
 
-      - name: Install Allure
-        run: npm install -g allure-commandline
-
-      - name: Generate Allure Report
+      - name: Generate Allure report
         run: allure generate allure-results -o allure-report --clean
 
       - name: Upload Pages artifact
@@ -45,10 +66,16 @@ jobs:
         with:
           path: allure-report
 
+
   deploy:
-    needs: test-and-deploy
+    needs: report
     runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4

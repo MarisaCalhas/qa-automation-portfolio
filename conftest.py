@@ -1,15 +1,37 @@
 import pytest
-from playwright.sync_api import sync_playwright
+import allure
 
 
-@pytest.fixture(scope="function")
-def page():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
+# ---------------------------
+# PLAYWRIGHT FIXTURE
+# ---------------------------
+@pytest.fixture
+def page(browser):
+    context = browser.new_context()
+    page = context.new_page()
+    yield page
+    context.close()
 
-        yield page
 
-        context.close()
-        browser.close()
+# ---------------------------
+# SCREENSHOT ON FAILURE
+# ---------------------------
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        try:
+            page = item.funcargs.get("page")
+
+            if page:
+                screenshot = page.screenshot()
+
+                allure.attach(
+                    screenshot,
+                    name="Failure Screenshot",
+                    attachment_type=allure.attachment_type.PNG
+                )
+        except Exception as e:
+            print(f"Screenshot error: {e}")

@@ -1,4 +1,4 @@
 pytest
-playwright
 pytest-xdist
+playwright
 allure-pytest
