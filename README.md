@@ -1,4 +1,4 @@
-# 🇨🇭 UI Automation Framework (Python + Playwright)
+# UI Automation Framework (Python + Playwright)
 
 ![CI](https://github.com/MarisaCalhas/qa-automation-portfolio/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
@@ -8,9 +8,8 @@
 
 ---
 
-## 🇨🇭 Overview (Swiss Standard QA Project)
+## Overview (QA Project)
 
-This project simulates a **real-world QA Automation framework** used in enterprise environments such as **fintech and consulting companies in Switzerland**.
 
 It demonstrates production-level skills in:
 
