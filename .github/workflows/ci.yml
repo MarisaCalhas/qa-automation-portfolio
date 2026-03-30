@@ -18,7 +18,10 @@ jobs:
 # =========================
   test:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: project_1_ui_ecommerce
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,10 +48,10 @@ jobs:
           path: allure-results
 
       - name: Generate Metrics
-        run: python scripts/metrics_collector.py
+        run: python project_1_ui_ecommerce/scripts/metrics_collector.py
 
       - name: Generate Charts
-        run: python scripts/generate_charts.py
+        run: python project_1_ui_ecommerce/scripts/generate_charts.py
 
       - name: Upload Metrics
         uses: actions/upload-artifact@v4
