@@ -10,18 +10,13 @@ permissions:
   pages: write
   id-token: write
 
-
 jobs:
 
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Debug structure
-        run: ls -R
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,17 +26,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Playwright browsers
+      - name: Install Playwright
         run: python -m playwright install --with-deps
 
       - name: Run tests
-        run: pytest tests -s -vv --maxfail=1 --alluredir=allure-results
-
-      - name: Upload Allure results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: allure-results
+        run: pytest tests -s -vv --alluredir=allure-results
 
       - name: Generate Metrics
         run: python scripts/metrics_collector.py
@@ -54,42 +43,3 @@ jobs:
         with:
           name: metrics
           path: metrics
-
-
-  report:
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download results
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-results
-
-      - name: Install Allure
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
-          npm install -g allure-commandline
-
-      - name: Generate report
-        run: allure generate allure-results -o allure-report --clean
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: allure-report
-
-
-  deploy:
-    needs: report
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
