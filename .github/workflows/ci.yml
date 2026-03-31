@@ -16,13 +16,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: project_1_ui_ecommerce
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Debug structure (IMPORTANT)
+        run: ls -R
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -30,8 +29,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps
@@ -43,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-results
-          path: project_1_ui_ecommerce/allure-results
+          path: allure-results
 
       - name: Generate Metrics
         run: python scripts/metrics_collector.py
@@ -55,16 +53,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: metrics
-          path: project_1_ui_ecommerce/metrics
+          path: metrics
 
 
   report:
     needs: test
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: project_1_ui_ecommerce
 
     steps:
       - uses: actions/checkout@v4
