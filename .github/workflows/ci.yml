@@ -29,13 +29,13 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r project_1_ui_ecommerce/requirements.txt
 
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps
 
       - name: Run tests
-        run: pytest tests -s -vv --maxfail=1 --alluredir=allure-results
+        run: pytest project_1_ui_ecommerce/tests -s -vv --maxfail=1 --alluredir=allure-results
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -44,19 +44,16 @@ jobs:
           path: allure-results
 
       - name: Generate Metrics
-        run: python scripts/metrics_collector.py
-
-      - name: Generate Metrics
-        run: python project_1_ui_ecommerce/Scripts/metrics_collector.py
+        run: python project_1_ui_ecommerce/scripts/metrics_collector.py
 
       - name: Generate Charts
-        run: python project_1_ui_ecommerce/Scripts/generate_charts.py
+        run: python project_1_ui_ecommerce/scripts/generate_charts.py
 
       - name: Upload Metrics
         uses: actions/upload-artifact@v4
         with:
           name: metrics
-          path: metrics
+          path: project_1_ui_ecommerce/metrics
 
 
   report:

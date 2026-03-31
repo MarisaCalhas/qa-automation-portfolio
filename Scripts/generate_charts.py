@@ -2,42 +2,21 @@ import json
 import matplotlib.pyplot as plt
 import os
 
+METRICS_FILE = "project_1_ui_ecommerce/metrics/metrics.json"
 
-def load_metrics():
-    with open("metrics/metrics.json", "r") as f:
-        return json.load(f)
+if not os.path.exists(METRICS_FILE):
+    print("No metrics file found")
+    exit(1)
 
+with open(METRICS_FILE) as f:
+    data = json.load(f)
 
-def generate_charts():
-    metrics = load_metrics()
+labels = ["Passed", "Failed"]
+values = [data["passed"], data["failed"]]
 
-    os.makedirs("metrics/charts", exist_ok=True)
+plt.figure()
+plt.bar(labels, values)
+plt.title("Test Results")
+plt.savefig("project_1_ui_ecommerce/metrics/results.png")
 
-    # =========================
-    # 1. PASS/FAIL CHART
-    # =========================
-    labels = ["Passed", "Failed", "Skipped"]
-    values = [
-        metrics["passed"],
-        metrics["failed"],
-        metrics["skipped"]
-    ]
-
-    plt.figure()
-    plt.bar(labels, values)
-    plt.title("Test Results Overview")
-    plt.savefig("metrics/charts/test_results.png")
-
-    # =========================
-    # 2. PERFORMANCE CHART
-    # =========================
-    plt.figure()
-    plt.bar(["Avg Duration (ms)"], [metrics["avg_duration_ms"]])
-    plt.title("Test Execution Performance")
-    plt.savefig("metrics/charts/performance.png")
-
-    print("Charts generated")
-
-
-if __name__ == "__main__":
-    generate_charts()
+print("Chart generated")
