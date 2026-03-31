@@ -3,7 +3,13 @@ name: QA Automation Pipeline
 on:
   push:
     branches: [ main ]
+
   pull_request:
+
+  schedule:
+    - cron: "0 1 * * *"  # 01:00 UTC todos os dias
+
+  workflow_dispatch:  # permite correr manualmente
 
 permissions:
   contents: read
@@ -16,7 +22,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -43,3 +50,4 @@ jobs:
         with:
           name: metrics
           path: metrics
+          
