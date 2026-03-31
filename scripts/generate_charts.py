@@ -2,43 +2,22 @@ import json
 import matplotlib.pyplot as plt
 import os
 
+METRICS_FILE = "metrics/metrics.json"
+OUTPUT_DIR = "metrics"
 
-def load_metrics():
-    with open("metrics/metrics.json", "r") as f:
-        return json.load(f)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+with open(METRICS_FILE, "r") as f:
+    data = json.load(f)
 
-def generate_charts():
-    metrics = load_metrics()
+tests = data.get("tests", [])
+passed = data.get("passed", 0)
+failed = data.get("failed", 0)
 
-    os.makedirs("metrics/charts", exist_ok=True)
+labels = ["Passed", "Failed"]
+values = [passed, failed]
 
-    # =========================
-    # 1. PASS/FAIL CHART
-    # =========================
-    labels = ["Passed", "Failed", "Skipped"]
-    values = [
-        metrics["passed"],
-        metrics["failed"],
-        metrics["skipped"]
-    ]
-
-    plt.figure()
-    plt.bar(labels, values)
-    plt.title("Test Results Overview")
-    plt.savefig("metrics/charts/test_results.png")
-
-    # =========================
-    # 2. PERFORMANCE CHART
-    # =========================
-    plt.figure()
-    plt.bar(["Avg Duration (ms)"], [metrics["avg_duration_ms"]])
-    plt.title("Test Execution Performance")
-    plt.savefig("metrics/charts/performance.png")
-
-    print("Charts generated successfully")
-
-
-
-if __name__ == "__main__":
-    generate_charts()
+plt.figure()
+plt.bar(labels, values)
+plt.title("Test Results")
+plt.savefig(f"{OUTPUT_DIR}/test_results.png")

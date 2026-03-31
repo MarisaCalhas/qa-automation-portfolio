@@ -1,4 +1,6 @@
 pytest
+pytest-playwright
 playwright
 allure-pytest
 matplotlib
+pytest-xdist

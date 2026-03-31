@@ -1,6 +1,5 @@
 name: QA Automation Pipeline
 
-
 on:
   push:
     branches: [ main ]
