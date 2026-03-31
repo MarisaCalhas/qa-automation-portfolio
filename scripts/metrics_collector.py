@@ -1,6 +1,7 @@
 import json
 import os
 
+
 ALLURE_RESULTS_DIR = "allure-results"
 
 
@@ -8,7 +9,6 @@ def load_results():
     results = []
 
     if not os.path.exists(ALLURE_RESULTS_DIR):
-        print("No allure-results directory found")
         return results
 
     for file in os.listdir(ALLURE_RESULTS_DIR):
@@ -28,7 +28,7 @@ def generate_metrics():
     durations = []
 
     for r in results:
-        status = r.get("status", "unknown")
+        status = r.get("status")
 
         if status == "passed":
             passed += 1
@@ -37,15 +37,11 @@ def generate_metrics():
         elif status == "skipped":
             skipped += 1
 
-        start = r.get("start")
-        stop = r.get("stop")
-
-        if start and stop:
-            durations.append(stop - start)
+        if "stop" in r and "start" in r:
+            durations.append(r["stop"] - r["start"])
 
     total = passed + failed + skipped
-
-    success_rate = (passed / total * 100) if total else 0
+    success_rate = (passed / total * 100) if total > 0 else 0
     avg_duration = sum(durations) / len(durations) if durations else 0
 
     metrics = {
@@ -63,6 +59,7 @@ def generate_metrics():
         json.dump(metrics, f, indent=4)
 
     print("Metrics generated:", metrics)
+
 
 
 if __name__ == "__main__":
